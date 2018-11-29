@@ -15,7 +15,7 @@ touch ~/.ansible.cfg
 Open ~/.ansible.cfg file and add the following lines:
 
 [defaults]
-inventory = ~/Ansible/ansible/hosts
+inventory = ~/Ansible/ansible/hosts /n
 remote_user = root
 ask_sudo_pass= true
 
