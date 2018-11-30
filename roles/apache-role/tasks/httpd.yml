@@ -1,1 +1,28 @@
+---
+- name: install epel repo
+  yum: name=epel-release state=present
 
+- name: install apache
+  yum: name=httpd state=present
+  
+- name: enabled mod_rewrite
+  apache2_module: name=rewrite state=present
+  notify: restart httpd 
+  
+- name: Create install directory
+  file:
+    state: directory
+    path: /var/www/html
+    owner: www-data
+    group: www-data
+    mode: 0755  
+  
+- name: Copy files to remote host
+  copy:
+    src: dist/
+    dest: /var/www/html
+    owner: www-data
+    group: www-data
+    mode: 0755
+  
+  
