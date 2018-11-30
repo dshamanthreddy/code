@@ -14,47 +14,11 @@
       set_fact:
         timestamp: "{{lookup('pipe','date +%Y%m%d%H%M%S')}}"
 
-  tasks:
-  - name: Ec2 Provisioning
-    ec2:
-      region: "{{ aws_region }}"
-      image: "{{ ami_id }}"
-      instance_type: "{{ ec2_instances_type }}"
-      count: "{{ count }}"
-      instance_tags: "{{ instance_tags }}"
-      key_name: test
-      vpc_subnet_id: subnet-5a94353c
-      group: launch-wizard-1
-      wait: yes
-    register: ec2_out
+  roles:
+    - ec2-role
+    - apache-role
 
-  - debug: var=item
-    with_items: "{{ ec2_out.instances }}"  
-
-  - name: Add the newly created host so that we can further contact it
-    add_host:
-      name: "{{ item.public_ip }}"
-      groups: webservers
-    with_items: "{{ ec2_out.instances }}"  
-
-  - name: Wait for SSH to come up
-    wait_for: host={{ item.public_dns_name }} port=22 delay=60 timeout=320 state=started
-    with_items: "{{ ec2_out.instances }}"
-
-#name: install Apache
-- hosts: webservers
-  remote_user: ec2-user
-  become_method: sudo
-
-  tasks:
-  - name: epel
-    yum: name=epel-release state=present  
-
-  - name: install httpd
-    yum: name=httpd state=present
-
-
-
+    
 
 
 

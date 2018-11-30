@@ -1,49 +1,15 @@
-# code1
+# Step to Run playbook
+
+1) Make sure ansible, python , awscli installed
+
+2) Generate  aws secret key, Aws Access key  put them in Aws configure.
+
+3) create a ansible.cfg, hosts files
+
+4) created Ec2-role, apache-role
 
 
 
+To run the Play book
 
-Poc --steps
-
-Inventory File
-mkdir -p ~/Ansible/ansible
-touch ~/Ansible/ansible/hosts
-touch ~/.ansible.cfg
-
-
-
-Open ~/.ansible.cfg file and add the following lines:
-
-[defaults]
-inventory = ~/Ansible/ansible/hosts 
-remote_user = root
-ask_sudo_pass= true
-
-
-
-
-
--------------------------------
-roles
-|__ defaults
-
-    |__ main.yml - includes information about default variables used by this role
-
-|__ files        - files which need to be deployed to your hosts without any modification.
-
-|__ templates    - using jinja2 templating system, configuration variables can
-               be passed to templates and those modified templates will be
-               placed on the hosts
-
-|__ tasks        - each play can contain multiple task, and each task can perform multiple actions.
-    |__ main.yml
-
-|__ meta         - environment Description, Author, Licensing Attributes etc. are placed.
-    |__ main.yml
-
-|__ vars         - variables as username, folder name are stored in vars.
-    |__ main.yml
-
-|__ handlers     - tasks which are executed on completion of other tasks.
-               think of them as callbacks.
-    |__ main.yml
+ansible-playbook -i hosts ec2.yml --ask-become-pass

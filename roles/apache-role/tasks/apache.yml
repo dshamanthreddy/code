@@ -1,0 +1,55 @@
+---
+- name: install epel repo
+  yum: name=epel-release state=present
+
+- name: install apache
+  yum: name=httpd state=present  
+
+- name: Makr Dir for Hello HTML
+  file:
+    path: /var/www/hello.com/hello_html
+    state: directory
+    mode: 0755
+    owner: apache2
+    group: apache2
+
+- name: enabled mod_rewrite
+  apache2_module: 
+      name: rewrite 
+      state: present
+  notify: restart httpd    
+
+- name: Copy Hello World HTML
+  copy:
+    file: "index.html"
+    dest: "/var/www/hello.com/hello_html/index.html"  
+
+- name: apache2 listen on port {{ http_port }}
+  lineinfile: 
+    dest: /etc/apache2/ports.conf
+    regexp: "^Listen " 
+    line: "Listen {{ http_port }}"
+    state: present
+    
+- name: apache2 virtualhost on port {{ http_port }}
+  lineinfile:
+    dest: /etc/apache2/sites-available/000-default.conf
+    regexp: "^<VirtualHost *:"
+    line: "<VirtualHost *:{{ http_port }}>"    
+  
+- name: create virtual host file
+  template: 
+    src: virtualhost.conf 
+    dest: /etc/apache2/sites-available/{{ domain }}.conf
+
+
+- name: a2ensite {{ domain }}
+  command: a2ensite {{ domain }}
+    args:
+      creates: /etc/apache2/sites-enabled/{{ domain }}.conf
+  notify: restart apache2    
+
+
+- name: start apache
+  service: name=httpd state=started enabled=yes
+  notify: restart httpd
