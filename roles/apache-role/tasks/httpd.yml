@@ -9,20 +9,17 @@
   apache2_module: name=rewrite state=present
   notify: restart httpd 
   
-- name: Create install directory
+- name: Makr Dir for Hello HTML
   file:
+    path: /var/www/hello.com/hello_html
     state: directory
-    path: /var/www/html
-    owner: www-data
-    group: www-data
-    mode: 0755  
-  
-- name: Copy files to remote host
-  copy:
-    src: dist/
-    dest: /var/www/html
-    owner: www-data
-    group: www-data
     mode: 0755
+    owner: apache2
+    group: apache2
   
+- name: Copy Hello World HTML
+  copy:
+    file: "index.html"
+    dest: "/var/www/hello.com/hello_html/index.html"
+  notify: restart httpd
   
