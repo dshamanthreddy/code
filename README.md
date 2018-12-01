@@ -1,3 +1,6 @@
+
+###### INFRA ######
+
 # Step to Run playbook
 
 1) Make sure ansible, python , awscli installed
@@ -13,3 +16,15 @@
 To run the Play book
 
 ansible-playbook -i hosts ec2.yml --ask-become-pass
+
+
+
+###### Python ########
+
+steps to run python script
+
+Chmod +x solution.py
+
+./solution.py
+
+Enter N credit cards
